@@ -1,0 +1,5 @@
+Welcome to the fantasy baseball track and draft project.  This is a web application
+designed to aid in my fantasy baseball draft, and track players during the season.
+
+This web app has additional purposes: give me an excuse to build a non-trivial project
+in python, and to learn django.  We'll see how far I get. :-) 
