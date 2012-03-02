@@ -38,7 +38,7 @@ def processPecotaBatterFile(batterFile):
         last_name = line['LASTNAME']
         bpid = line['BPID']
         mlbid = line['MLBCODE']
-        pos = line['POS']
+        pos = line['POS'].strip()
         
         # Do we have this player already?
         playerSet = Player.objects.filter(firstName = first_name, lastName = last_name)
@@ -58,6 +58,7 @@ def addPecotaBatterLine(line, player):
     newBatter.age = line['AGE']
     newBatter.atBats = line['AB']
     newBatter.team = line['TEAM']
+    newBatter.league = line['LG']
     newBatter.hits = line['H']
     newBatter.doubles = line['2B']
     newBatter.triples = line['3B']
@@ -67,6 +68,8 @@ def addPecotaBatterLine(line, player):
     newBatter.walks = line['BB']
     newBatter.strikeouts = line['SO']
     newBatter.stolenBases = line['SB']
+    newBatter.totalAvg = line['TAv']
+    newBatter.vorp=line['VORP']
     newBatter.save()
     
     

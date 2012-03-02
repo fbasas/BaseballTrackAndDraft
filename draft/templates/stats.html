@@ -3,32 +3,48 @@
 <title>{{pageTitle}}</title>
 <h1>{{headerTitle}}</h1>
 
-<table>
+<table cellpadding="5">
     <tr>
         <th>Line</th>
         <th>First</th>
         <th>Last</th>
         <th>Team</th>
+        <th>League</th>
         <th>Pos</th>
-        <th>Avg</th>
+        <th>AB</th>
         <th>Runs</th>
         <th>HR</th>
         <th>RBI</th>
         <th>SB</th>
+        <th>BB</th>
+        <th>K</th>
+        <th>Avg</th>
+        <th>OBP</th>
+        <th>SLG</th>
+        <th>TAv</th>
+        <th>VORP</th>
     </tr>
 
     {% for batter in batters %}
         <tr>
-            <td>{{batter.yearLabel}}</td>
+            <td>{{batter.fullLabel}}</td>
             <td>{{batter.player.firstName}}</td>
             <td>{{batter.player.lastName}}</td>
             <td>{{batter.team}}</td>
+            <td>{{batter.league}}</td>
             <td>{{batter.player.pos}}</td>
-            <td>{{batter.avg|floatformat:3}}</td>
+            <td>{{batter.atBats}}</td>
             <td>{{batter.runs}}</td>
             <td>{{batter.homeRuns}}</td>
             <td>{{batter.rbi}}</td>
             <td>{{batter.stolenBases}}</td>
+            <td>{{batter.walks}}</td>
+            <td>{{batter.strikeouts}}</td>
+            <td>{{batter.avg|floatformat:3}}</td>
+            <td>{{batter.obp|floatformat:3}}</td>
+            <td>{{batter.slg|floatformat:3}}</td>
+            <td>{{batter.totalAvg|floatformat:3}}</td>
+            <td>{{batter.vorp|floatformat:1}}</td>
         </tr>
     {% endfor %}
 </table>

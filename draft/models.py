@@ -18,6 +18,7 @@ class BatterYearLine(models.Model):
     yearLabel = models.CharField(max_length=15)
     age = models.IntegerField()
     team = models.CharField(max_length=4)
+    league = models.CharField(max_length=3)
     atBats = models.IntegerField()
     hits = models.IntegerField()
     doubles = models.IntegerField()
@@ -28,11 +29,33 @@ class BatterYearLine(models.Model):
     walks = models.IntegerField()
     strikeouts = models.IntegerField()
     stolenBases = models.IntegerField()
+    totalAvg = models.DecimalField(decimal_places=3, max_digits=4)
+    vorp = models.DecimalField(decimal_places=1, max_digits=5)
 
     def _getAvg(self):
         return float(self.hits) / float(self.atBats)
 
     avg = property(_getAvg)
+
+    def _getObp(self):
+        return float(self.walks + self.hits) / float(self.atBats + self.walks)
+
+    obp = property(_getObp)
+
+    def _getTotalBases(self):
+        return self.hits + self.doubles + 2 * self.triples + 3 * self.homeRuns
+
+    totalBases = property(_getTotalBases)
+
+    def _getSlg(self):
+        return float(self._getTotalBases()) / float(self.atBats)
+
+    slg = property(_getSlg)
+
+    def _getFullLabel(self):
+        return self.yearLabel + ' ' + self.label;
+
+    fullLabel = property(_getFullLabel)
     
 class PitcherYearLine(models.Model):
     player = models.ForeignKey(Player)

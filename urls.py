@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'draft/clear/', 'draft.views.utils.clear'),
     url(r'draft/cleared/', 'draft.views.utils.cleared'),
 
-    url(r'batters/find/(?P<pos>\w{2})', 'draft.views.batters.show'),
+    url(r'batters/find/(?P<pos>\w{1,2})/(?P<league>AL|NL|MLB)', 'draft.views.batters.show'),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls))
