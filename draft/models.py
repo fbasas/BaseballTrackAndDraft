@@ -28,6 +28,11 @@ class BatterYearLine(models.Model):
     walks = models.IntegerField()
     strikeouts = models.IntegerField()
     stolenBases = models.IntegerField()
+
+    def _getAvg(self):
+        return float(self.hits) / float(self.atBats)
+
+    avg = property(_getAvg)
     
 class PitcherYearLine(models.Model):
     player = models.ForeignKey(Player)
