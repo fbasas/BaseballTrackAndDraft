@@ -1,8 +1,3 @@
-'''
-Created on Feb 25, 2012
-
-@author: fbasas
-'''
 from draft.models import Player, BatterYearLine
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -18,3 +13,4 @@ def cleared(request):
                                 'pageTitle' : 'Information',
                                 'message' : 'Database Cleared'
                                })
+

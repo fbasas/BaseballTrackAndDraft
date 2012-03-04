@@ -2,6 +2,30 @@ from draft.models import PitcherYearLine
 from django.shortcuts import render_to_response
 from django.db.models import F
 
+pitcherPecotaConfig = [
+    ('Line', 'fullLabel'),
+    ('Name', 'player.fullName'),
+    ('Age', 'age'),
+    ('Team', 'team'),
+    ('League', 'league'),
+    ('G', 'games'),
+    ('GS', 'gamesStarted'),
+    ('QS', 'qualityStarts'),
+    ('IP', 'inningsPitched', 1),
+    ('W', 'wins'),
+    ('SV', 'saves'),
+    ('H', 'hitsAllowed'),
+    ('BB', 'walksAllowed'),
+    ('SO', 'strikeouts'),
+    ('ERA', 'era', 2),
+    ('FAIRRA', 'fairRa', 2),
+    ('WHIP', 'whip', 3),
+    ('BB9', 'bb9', 1),
+    ('K9', 'k9', 1),
+    ('K/BB', 'kbbRatio', 2),
+    ('WARP', 'warp', 1)
+]
+
 def show(request, pos, league, orderby):
     pitcherLines = PitcherYearLine.objects.all()
     if (pos == 'SP'):
@@ -13,10 +37,11 @@ def show(request, pos, league, orderby):
         pitcherLines = pitcherLines.filter(league__exact=league)
 
     pitcherLines = pitcherLines.order_by('-' + orderby)
-    return render_to_response('pitcherStats.html',
+    return render_to_response('stats.html',
         {
-            'pitchers' : pitcherLines,
+            'lines' : pitcherLines,
             'pageTitle' : 'Pitcher Stats for ' + pos,
             'headerTitle' : 'Pitcher lines for pos: ' + pos,
-            'pos' : pos
+            'pos' : pos,
+            'config' : pitcherPecotaConfig
         })

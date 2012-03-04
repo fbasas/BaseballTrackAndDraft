@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<title>{{pageTitle}}</title>
+<h1>{{headerTitle}}</h1>
+
+{% load draft_extras %}
+
+<table cellpadding="5">
+    <tr>
+        {% for column in config %}
+            <th>{{column|getHeader}}</th>
+        {% endfor %}
+    </tr>
+
+    {% for line in lines %}
+        <tr>
+            {% for column in config %}
+                <td>{{line|getVal:column}}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>

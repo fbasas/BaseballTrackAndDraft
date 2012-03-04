@@ -1,6 +1,27 @@
 from draft.models import BatterYearLine
 from django.shortcuts import render_to_response
 
+batterPecotaConfig = [
+    ('Line', 'fullLabel'),
+    ('Name', 'player.fullName'),
+    ('Age', 'age'),
+    ('Team', 'team'),
+    ('League', 'league'),
+    ('Pos', 'player.pos'),
+    ('AB', 'atBats'),
+    ('Runs', 'runs'),
+    ('HR', 'homeRuns'),
+    ('RBI', 'rbi'),
+    ('SB', 'stolenBases'),
+    ('BB', 'walks'),
+    ('K', 'strikeouts'),
+    ('Avg', 'avg', 3),
+    ('OBP', 'obp', 3),
+    ('SLG', 'slg', 3),
+    ('TAv', 'totalAvg', 3),
+    ('VORP', 'vorp', 1)
+]
+
 def show(request, pos, league, orderby):
     batterLines = BatterYearLine.objects.all()
     if (pos == 'OF'):
@@ -12,10 +33,11 @@ def show(request, pos, league, orderby):
         batterLines = batterLines.filter(league__exact=league)
 
     batterLines = batterLines.order_by('-' + orderby)
-    return render_to_response('batterStats.html',
+    return render_to_response('stats.html',
         {
-            'batters' : batterLines,
+            'lines' : batterLines,
             'pageTitle' : 'Batter Stats for ' + pos,
             'headerTitle' : 'Batter lines for pos: ' + pos,
-            'pos' : pos
+            'pos' : pos,
+            'config' : batterPecotaConfig
         })
