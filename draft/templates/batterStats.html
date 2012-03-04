@@ -6,8 +6,8 @@
 <table cellpadding="5">
     <tr>
         <th>Line</th>
-        <th>First</th>
-        <th>Last</th>
+        <th>Name</th>
+        <th>Age</th>
         <th>Team</th>
         <th>League</th>
         <th>Pos</th>
@@ -28,8 +28,8 @@
     {% for batter in batters %}
         <tr>
             <td>{{batter.fullLabel}}</td>
-            <td>{{batter.player.firstName}}</td>
-            <td>{{batter.player.lastName}}</td>
+            <td>{{batter.player.fullName}}</td>
+            <td>{{batter.age}}</td>
             <td>{{batter.team}}</td>
             <td>{{batter.league}}</td>
             <td>{{batter.player.pos}}</td>
