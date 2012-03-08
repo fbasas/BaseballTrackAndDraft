@@ -1,0 +1,19 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<title>{{ pageTitle }}</title>
+<h1>{{ headerTitle }}</h1>
+
+<form enctype="multipart/form-data" action="{{ action }}" method="post">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    {% for frm in formset %}
+        <table>
+            {{ frm.as_p }}
+        </table>
+    {% endfor %}
+
+    <input type="submit" value="{{ submitValue }}" />
+</form>

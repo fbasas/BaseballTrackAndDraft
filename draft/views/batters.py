@@ -22,17 +22,21 @@ batterPecotaConfig = [
     ('VORP', 'vorp', 1)
 ]
 
-def show(request, pos, league, orderby):
+def show(request, pos, league, orderby, sortorder):
     batterLines = BatterYearLine.objects.all()
-    if (pos == 'OF'):
+    if pos == 'OF':
         batterLines = batterLines.filter(player__pos__contains='F')
-    elif (pos != 'ALL'):
+    elif pos != 'ALL':
         batterLines = batterLines.filter(player__pos__exact=pos)
 
-    if (league != 'MLB'):
+    if league != 'MLB':
         batterLines = batterLines.filter(league__exact=league)
 
-    batterLines = batterLines.order_by('-' + orderby)
+    if sortorder == 'ASC':
+        batterLines = batterLines.filter(orderby)
+    else:
+        batterLines = batterLines.filter('-' + orderby)
+
     return render_to_response('stats.html',
         {
             'lines' : batterLines,

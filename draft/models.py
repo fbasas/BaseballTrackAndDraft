@@ -36,29 +36,13 @@ class BatterYearLine(models.Model):
     stolenBases = models.IntegerField()
     totalAvg = models.DecimalField(decimal_places=3, max_digits=4)
     vorp = models.DecimalField(decimal_places=1, max_digits=5)
-
-    def _getAvg(self):
-        return float(self.hits) / float(self.atBats)
-
-    avg = property(_getAvg)
-
-    def _getObp(self):
-        return float(self.walks + self.hits) / float(self.atBats + self.walks)
-
-    obp = property(_getObp)
-
-    def _getTotalBases(self):
-        return self.hits + self.doubles + 2 * self.triples + 3 * self.homeRuns
-
-    totalBases = property(_getTotalBases)
-
-    def _getSlg(self):
-        return float(self._getTotalBases()) / float(self.atBats)
-
-    slg = property(_getSlg)
+    avg = models.DecimalField(decimal_places=3, max_digits=4)
+    obp = models.DecimalField(decimal_places=3, max_digits=4)
+    slg = models.DecimalField(decimal_places=3, max_digits=4)
+    totalBases = models.IntegerField()
 
     def _getFullLabel(self):
-        return self.yearLabel + ' ' + self.label;
+        return self.yearLabel + ' ' + self.label
 
     fullLabel = property(_getFullLabel)
     
@@ -81,31 +65,15 @@ class PitcherYearLine(models.Model):
     games = models.DecimalField(decimal_places=1, max_digits=3)
     gamesStarted = models.DecimalField(decimal_places=1, max_digits=3)
     qualityStarts = models.DecimalField(decimal_places=1, max_digits=3)
+    whip = models.DecimalField(decimal_places=3, max_digits=4)
+    bb9 = models.DecimalField(decimal_places=1, max_digits=3)
+    k9 = models.DecimalField(decimal_places=1, max_digits=3)
+    kbbRatio = models.DecimalField(decimal_places=2, max_digits=4)
 
     def _getFullLabel(self):
         return self.yearLabel + ' ' + self.label
 
     fullLabel = property(_getFullLabel)
-
-    def _getWHIP(self):
-        return float(self.walksAllowed + self.hitsAllowed) / float(self.inningsPitched)
-
-    whip = property(_getWHIP)
-
-    def _getBB9(self):
-        return float(self.walksAllowed * 9.0) / float(self.inningsPitched)
-
-    bb9 = property(_getBB9)
-
-    def _getK9(self):
-        return float(self.strikeouts * 9.0) / float(self.inningsPitched)
-
-    k9 = property(_getK9)
-
-    def _getKBbRatio(self):
-        return float(self.strikeouts) / float(self.walksAllowed)
-
-    kbbRatio = property(_getKBbRatio)
         
 class League(models.Model):
     leagueType = models.CharField(max_length=50)
@@ -113,4 +81,11 @@ class League(models.Model):
     
 class Team(models.Model):
     league = models.ForeignKey(League)
-    name = models.CharField(max_length=50)
+    teamName = models.CharField(max_length=50)
+    managerName = models.CharField(max_length=50)
+
+class DraftPick(models.Model):
+    league = models.ForeignKey(League)
+    team = models.ForeignKey(Team)
+    player = models.ForeignKey(Player)
+    pick = models.IntegerField()

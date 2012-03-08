@@ -9,7 +9,7 @@ def getVal(line, columnConfig):
     for attr in attrList:
         val = getattr(val, attr)
 
-    if (len(columnConfig) == 3):
+    if len(columnConfig) == 3:
         formatStr = "%(num)." + str(columnConfig[2]) + "f"
         return formatStr % {'num' : val}
     else:

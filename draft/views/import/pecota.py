@@ -43,7 +43,7 @@ def processPecotaPitcherFile(pitcherFile):
 
         # Do we have this player already?
         playerSet = Player.objects.filter(firstName = first_name, lastName = last_name)
-        if playerSet.count() == 0:
+        if not playerSet.count():
             # No player found, so add one
             newPlayer = Player(firstName = first_name, lastName = last_name, importMethod = 'PECOTA',
                 bpId = bpid, mlbId = mlbid)
@@ -71,6 +71,10 @@ def addPecotaPitcherLine(line, player):
     newPitcher.games = line['G']
     newPitcher.gamesStarted = line['GS']
     newPitcher.qualityStarts = line['QS']
+    newPitcher.whip = (float(newPitcher.walksAllowed) + float(newPitcher.hitsAllowed)) / float(newPitcher.inningsPitched)
+    newPitcher.bb9 = line['BB9']
+    newPitcher.k9 = line['SO9']
+    newPitcher.kbbRatio = float(newPitcher.strikeouts) / float(newPitcher.walksAllowed)
     newPitcher.save()
     
 def processPecotaBatterFile(batterFile):
@@ -84,7 +88,7 @@ def processPecotaBatterFile(batterFile):
         
         # Do we have this player already?
         playerSet = Player.objects.filter(firstName = first_name, lastName = last_name)
-        if playerSet.count() == 0:
+        if not playerSet.count():
             # No player found, so add one
             newPlayer = Player(firstName = first_name, lastName = last_name, importMethod = 'PECOTA',
                                bpId = bpid, mlbId = mlbid, pos = pos)
@@ -111,7 +115,11 @@ def addPecotaBatterLine(line, player):
     newBatter.strikeouts = line['SO']
     newBatter.stolenBases = line['SB']
     newBatter.totalAvg = line['TAv']
-    newBatter.vorp=line['VORP']
+    newBatter.vorp = line['VORP']
+    newBatter.avg = line['AVG']
+    newBatter.obp = line['OBP']
+    newBatter.slg = line['SLG']
+    newBatter.totalBases = line['TB']
     newBatter.save()
     
     
