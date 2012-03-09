@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+    </style>
+    <title>Baseball Track and Draft</title>
+</head>
+<body>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="#">Baseball Track and Draft</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="well sidebar-nav">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Admin</li>
+                        <li><a href="/draft/clear">Clear PECOTA Import</a></li>
+                        <li><a href="/draft/admin">Django Admin</a></li>
+                        <li class="nav-header">Players</li>
+                        <li><a href="/batters/find/ALL/MLB/vorp/DESC">Batters</a></li>
+                        <li><a href="/draft/pitchers">Pitchers</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="span10">
+                <div class="hero-unit">
+                    <h1>Baseball Track and Draft</h1>
+                    <p>An experiment in Python, Django, and Bootstrap...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

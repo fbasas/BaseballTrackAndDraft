@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, url, include
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 admin.autodiscover()
 
@@ -7,8 +8,11 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'baseball.views.home', name='home'),
     # url(r'^baseball/', include('baseball.foo.urls')),
+
     url(r'draft/import/pecota/importfinished', 'draft.views.import.pecota.importFinished'),
     url(r'draft/import/pecota/', 'draft.views.import.pecota.index'),
+
+    url(r'draft/changeFilter', 'draft.views.batters.changeFilter'),
 
     url(r'draft/clear/', 'draft.views.utils.clear'),
     url(r'draft/cleared/', 'draft.views.utils.cleared'),
@@ -24,5 +28,9 @@ urlpatterns = patterns('',
         'draft.views.pitchers.show'),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls))
+    url(r'^admin/', include(admin.site.urls)),
+
+    url(r'draft', 'draft.views.main.show')
 )
+
+urlpatterns += staticfiles_urlpatterns()

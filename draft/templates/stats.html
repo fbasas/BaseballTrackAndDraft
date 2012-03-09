@@ -1,22 +1,56 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
-<title>{{pageTitle}}</title>
-<h1>{{headerTitle}}</h1>
+<head>
+    <title>{{pageTitle}}</title>
+    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+</head>
 
-{% load draft_extras %}
+<body>
+    <h1>{{headerTitle}}</h1>
 
-<table cellpadding="5">
-    <tr>
-        {% for column in config %}
-            <th>{{column|getHeader}}</th>
-        {% endfor %}
-    </tr>
+    {% load draft_extras %}
 
-    {% for line in lines %}
-        <tr>
+    <div id="filter" class="modal hide fade">
+        <form enctype="multipart/form-data" action="/draft/changeFilter" method="post">
+            {%  csrf_token %}
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" >&times;</a>
+                <h3>Change batter filter</h3>
+            </div>
+
+            <div class="modal-body">
+               {{ form.as_table }}
+            </div>
+
+            <div class="modal-footer">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                <a href="#" class="btn" data-dismiss="modal" >Close</a>
+            </div>
+        </form>
+    </div>
+
+    <a data-toggle="modal" href="#filter" class="btn btn-primary btn-large">Change Filter</a>
+
+    <table class="table table-condensed table-striped" cellpadding="5">
+        <thead>
             {% for column in config %}
-                <td>{{line|getVal:column}}</td>
+                <th>{{column|getHeader}}</th>
             {% endfor %}
-        </tr>
-    {% endfor %}
-</table>
+        </thead>
+
+        {% for line in lines %}
+            <tr>
+                {% for column in config %}
+                    <td>{{line|getVal:column}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+<script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>

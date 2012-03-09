@@ -1,3 +1,6 @@
+from django import forms
+from django.forms.fields import ChoiceField
+from django.template.context import RequestContext
 from draft.models import BatterYearLine
 from django.shortcuts import render_to_response
 
@@ -22,6 +25,47 @@ batterPecotaConfig = [
     ('VORP', 'vorp', 1)
 ]
 
+class batterFilterForm(forms.Form):
+    POS_CHOICES = [
+        ('ALL', 'ALL'),
+        ('C', 'C'),
+        ('1B', '1B'),
+        ('2B', '2B'),
+        ('SS', 'SS'),
+        ('3B', '3B'),
+        ('OF', 'OF')
+    ]
+
+    LEAGUE_CHOICES = [
+        ('MLB', 'MLB'),
+        ('AL', 'AL'),
+        ('NL', 'NL')
+    ]
+
+    SORTORDER_CHOICES = [
+        ('ASC','Ascending'),
+        ('DESC', 'Descending')
+    ]
+
+    STAT_CHOICES = []
+
+    for entry in batterPecotaConfig:
+        STAT_CHOICES.append((entry[1], entry[0]))
+
+    pos = ChoiceField(choices=POS_CHOICES, label='Position')
+    league = ChoiceField(choices=LEAGUE_CHOICES, label='League')
+    orderby = ChoiceField(choices=STAT_CHOICES, label='Order By')
+    sortorder = ChoiceField(choices=SORTORDER_CHOICES, label='Sort Order')
+
+def changeFilter(request):
+    form = batterFilterForm(request.POST)
+    if form.is_valid():
+        return show(request,
+            form.cleaned_data['pos'],
+            form.cleaned_data['league'],
+            form.cleaned_data['orderby'],
+            form.cleaned_data['sortorder'])
+
 def show(request, pos, league, orderby, sortorder):
     batterLines = BatterYearLine.objects.all()
     if pos == 'OF':
@@ -33,9 +77,17 @@ def show(request, pos, league, orderby, sortorder):
         batterLines = batterLines.filter(league__exact=league)
 
     if sortorder == 'ASC':
-        batterLines = batterLines.filter(orderby)
+        batterLines = batterLines.order_by(orderby)
     else:
-        batterLines = batterLines.filter('-' + orderby)
+        batterLines = batterLines.order_by('-' + orderby)
+
+    form = batterFilterForm(initial=
+        {
+        'pos' : pos,
+        'league' : league,
+        'orderby' : orderby,
+        'sortorder' : sortorder
+        })
 
     return render_to_response('stats.html',
         {
@@ -43,5 +95,7 @@ def show(request, pos, league, orderby, sortorder):
             'pageTitle' : 'Batter Stats for ' + pos,
             'headerTitle' : 'Batter lines for pos: ' + pos,
             'pos' : pos,
-            'config' : batterPecotaConfig
-        })
+            'config' : batterPecotaConfig,
+            'form' : form
+        },
+        context_instance=RequestContext(request))
