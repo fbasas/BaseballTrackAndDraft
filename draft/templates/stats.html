@@ -3,19 +3,50 @@
 <head>
     <title>{{pageTitle}}</title>
     <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+            padding-top: 35px;
+            padding-bottom: 40px;
+        }
+
+        .stat-table {
+            padding-top: 10px;
+            padding-bottom: 15px;
+        }
+
+        .stat-header {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>{{headerTitle}}</h1>
-
     {% load draft_extras %}
 
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="#">Baseball Track and Draft</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="active"><a href="/draft">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <div id="filter" class="modal hide fade">
-        <form enctype="multipart/form-data" action="/draft/changeFilter" method="post">
+        <form enctype="multipart/form-data" action="{{ filterAction }}" method="post">
             {%  csrf_token %}
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" >&times;</a>
-                <h3>Change batter filter</h3>
+                <h3>Change filter</h3>
             </div>
 
             <div class="modal-body">
@@ -29,23 +60,50 @@
         </form>
     </div>
 
-    <a data-toggle="modal" href="#filter" class="btn btn-primary btn-large">Change Filter</a>
+    <div class="container-fluid">
+        <div class="row-fluid stat-header">
+            <div class="span2"></div>
+            <div class="span7">
+                <h1>{{headerTitle}} (Page {{ activePage }} of {{ numPages }})</h1>
+            </div>
+            <div class="span2">
+                <a data-toggle="modal" href="#filter" class="btn btn-primary btn-large">Change Filter</a>
+            </div>
+            <div class="span1"></div>
+        </div>
 
-    <table class="table table-condensed table-striped" cellpadding="5">
-        <thead>
-            {% for column in config %}
-                <th>{{column|getHeader}}</th>
-            {% endfor %}
-        </thead>
+        <div class="row-fluid stat-table">
+            <div class="span2"></div>
+            <div class="span9">
+                <table class="table table-condensed table-striped" cellpadding="5">
+                    <thead>
+                    {% for column in config %}
+                        <th>{{column|getHeader}}</th>
+                    {% endfor %}
+                    </thead>
 
-        {% for line in lines %}
-            <tr>
-                {% for column in config %}
-                    <td>{{line|getVal:column}}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
+                    {% for line in lines %}
+                        <tr>
+                            {% for column in config %}
+                                <td>{{line|getVal:column}}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="pager">
+                <li class="previous">
+                    <a href="{{ baseUrl }}/{{ activePage|prev }}">&larr; Previous</a>
+                </li>
+                <li class="next">
+                    <a href="{{ baseUrl }}/{{ activePage|next:numPages }}">Next &rarr;</a>
+                </li>
+            </div>
+        </div>
+    </div>
 </body>
 
 <!-- Le javascript

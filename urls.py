@@ -12,7 +12,8 @@ urlpatterns = patterns('',
     url(r'draft/import/pecota/importfinished', 'draft.views.import.pecota.importFinished'),
     url(r'draft/import/pecota/', 'draft.views.import.pecota.index'),
 
-    url(r'draft/changeFilter', 'draft.views.batters.changeFilter'),
+    url(r'draft/batters/changeFilter', 'draft.views.batters.changeFilter'),
+    url(r'draft/pitchers/changeFilter', 'draft.views.pitchers.changeFilter'),
 
     url(r'draft/clear/', 'draft.views.utils.clear'),
     url(r'draft/cleared/', 'draft.views.utils.cleared'),
@@ -22,9 +23,9 @@ urlpatterns = patterns('',
     url(r'league/addTeams/(?P<leagueType>scoresheet|yahoo)/(?P<name>\w*)/(?P<numTeams>\d*)', 'draft.views.league.addTeams'),
     url(r'league/setTeams/(?P<leagueId>\d*)/(?P<numTeams>\d*)', 'draft.views.league.setTeams'),
 
-    url(r'batters/find/(?P<pos>\w{1,3})/(?P<league>AL|NL|MLB)/(?P<orderby>\w*)/(?P<sortorder>ASC|DESC)',
+    url(r'batters/find/(?P<pos>\w{1,3})/(?P<league>AL|NL|MLB)/(?P<orderby>\w*)/(?P<sortorder>ASC|DESC)/(?P<page>\d*)',
         'draft.views.batters.show'),
-    url(r'pitchers/find/(?P<pos>SP|RP|ALL)/(?P<league>AL|NL|MLB)/(?P<orderby>\w*)/(?P<sortorder>ASC|DESC)',
+    url(r'pitchers/find/(?P<pos>SP|RP|ALL)/(?P<league>AL|NL|MLB)/(?P<orderby>\w*)/(?P<sortorder>ASC|DESC)/(?P<page>\d*)',
         'draft.views.pitchers.show'),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
