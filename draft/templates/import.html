@@ -1,6 +1,6 @@
 <title>{{pageTitle}}</title>
 <h1>{{headerTitle}}</h1>
-<form enctype="multipart/form-data" action="/draft/import/pecota/" method="post">
+<form enctype="multipart/form-data" action="/draft/import/{{ importType }}/" method="post">
 {% csrf_token %}
 {{form.as_p}}
 <input type="submit" value="Upload" />

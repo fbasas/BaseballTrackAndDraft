@@ -1,0 +1,40 @@
+{%  extends "base.html" %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row-fluid stat-header">
+            <div class="span1"></div>
+            <div class="span7">
+                <h2>{{headerTitle}}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span1"></div>
+            <div class="span7">
+                <table class="table table-condensed table-striped" cellpadding="5">
+                    {% for line in lines %}
+                        <tr>
+                            <td>{{ line.fullName }}</td>
+                            <td>{{ line.pos }}</td>
+                            <td>
+                                <select name="thr_type" id="{{ line.id }}_thr">
+                                    <option value="none">None</option>
+                                    <option value="green">Green</option>
+                                    <option value="yellow">Yellow</option>
+                                    <option value="red">Red</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="checkbox" value="{{ line.id }}_starter" /> Starter
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,9 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<head>
-    <title>{{pageTitle}}</title>
-    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+{% extends "base.html" %}
 
+{% block title %}{{ pageTitle }}{% endblock %}
+{% block localCss %}
     <style type="text/css">
         body {
             padding-top: 35px;
@@ -13,6 +11,8 @@
         .stat-table {
             padding-top: 10px;
             padding-bottom: 15px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 12px;
         }
 
         .stat-header {
@@ -20,27 +20,11 @@
             padding-bottom: 15px;
         }
     </style>
-</head>
+{% endblock %}
 
-<body>
-    {% load draft_extras %}
+{% load draft_extras %}
 
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container-fluid">
-                <a class="brand" href="#">Baseball Track and Draft</a>
-                <div class="nav-collapse">
-                    <ul class="nav">
-                        <li class="active"><a href="/draft">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
+{% block content %}
     <div id="filter" class="modal hide fade">
         <form enctype="multipart/form-data" action="{{ filterAction }}" method="post">
             {%  csrf_token %}
@@ -62,19 +46,19 @@
 
     <div class="container-fluid">
         <div class="row-fluid stat-header">
-            <div class="span2"></div>
+            <div class="span1"></div>
             <div class="span7">
-                <h1>{{headerTitle}} (Page {{ activePage }} of {{ numPages }})</h1>
+                <h2>{{headerTitle}} (Page {{ activePage }} of {{ numPages }})</h2>
             </div>
-            <div class="span2">
+            <div class="span2" align="right">
                 <a data-toggle="modal" href="#filter" class="btn btn-primary btn-large">Change Filter</a>
             </div>
-            <div class="span1"></div>
+            <div class="span2"></div>
         </div>
 
         <div class="row-fluid stat-table">
-            <div class="span2"></div>
-            <div class="span9">
+            <div class="span1"></div>
+            <div class="span11">
                 <table class="table table-condensed table-striped" cellpadding="5">
                     <thead>
                     {% for column in config %}
@@ -87,6 +71,18 @@
                             {% for column in config %}
                                 <td>{{line|getVal:column}}</td>
                             {% endfor %}
+
+                            {% if draft %}
+                                {% if line.player.draftpick_set.count == 0 %}
+                                    <td><a href="/draft/pick/{{ line.player.id }}/{{ teamToDraft.id }}/{{ leagueId }}">Draft</a></td>
+                                {% else %}
+                                    {% for pick in line.player.draftpick_set.all  %}
+                                        {% if pick.league.id == leagueId %}
+                                            <td>{{ pick.team.teamName }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>
@@ -96,19 +92,13 @@
         <div class="row-fluid">
             <div class="pager">
                 <li class="previous">
-                    <a href="{{ baseUrl }}/{{ activePage|prev }}">&larr; Previous</a>
+                    <a href="{{ baseUrl }}/{{ activePage|prev }}/{{ showdrafted }}">&larr; Previous</a>
                 </li>
                 <li class="next">
-                    <a href="{{ baseUrl }}/{{ activePage|next:numPages }}">Next &rarr;</a>
+                    <a href="{{ baseUrl }}/{{ activePage|next:numPages }}/{{ showdrafted }}">Next &rarr;</a>
                 </li>
             </div>
         </div>
     </div>
-</body>
+{% endblock %}
 
-<!-- Le javascript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-<script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
-<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>

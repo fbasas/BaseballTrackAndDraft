@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row-fluid stat-header">
+            <div class="span1"></div>
+            <div class="span7">
+                <h2>{{headerTitle}}</h2>
+            </div>
+        </div>
+    </div>
+    <ul>
+    {% for team in teams %}
+        {% if team != '' %}
+            <li><a href="/draft/thrStarterEdit/{{ team }}">{{ team }}</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endblock %}

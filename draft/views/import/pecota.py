@@ -17,6 +17,7 @@ def index(request):
     return render_to_response('import.html',
                               {
                                'form' : form,
+                               'importType' : 'pecota',
                                'pageTitle' : 'PECOTA Import',
                                'headerTitle' : 'Welcome to PECOTA Import'
                                },
@@ -75,6 +76,14 @@ def addPecotaPitcherLine(line, player):
     newPitcher.bb9 = line['BB9']
     newPitcher.k9 = line['SO9']
     newPitcher.kbbRatio = float(newPitcher.strikeouts) / float(newPitcher.walksAllowed)
+
+    if newPitcher.games <= newPitcher.gamesStarted * 2:
+        newPitcher.player.pos = 'SP'
+    else:
+        newPitcher.player.pos = 'RP'
+
+    newPitcher.player.curTeam = newPitcher.team
+    newPitcher.player.save()
     newPitcher.save()
     
 def processPecotaBatterFile(batterFile):
@@ -120,6 +129,9 @@ def addPecotaBatterLine(line, player):
     newBatter.obp = line['OBP']
     newBatter.slg = line['SLG']
     newBatter.totalBases = line['TB']
+
+    newBatter.player.curTeam = newBatter.team
+    newBatter.player.save()
     newBatter.save()
     
     
