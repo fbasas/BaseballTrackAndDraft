@@ -59,19 +59,27 @@ batterBbhqConfig = [
 LINES_PER_PAGE = 20
 
 class batterFilterForm(forms.Form):
-    STAT_CHOICES = []
-
-    for entry in batterPecotaConfig:
-        STAT_CHOICES.append((entry[1], entry[0]))
-
     pos = ChoiceField(choices=BATTER_POS_CHOICES, label='Position')
     league = ChoiceField(choices=LEAGUE_CHOICES, label='League')
-    orderby = ChoiceField(choices=STAT_CHOICES, label='Order By')
     sortorder = ChoiceField(choices=SORTORDER_CHOICES, label='Sort Order')
     showdrafted = ChoiceField(choices=YESNO_CHOICES, label='Show Drafted Players')
 
+    def __init__(self, config=None, *args, **kwargs):
+        STAT_CHOICES = []
+
+        if config is not None:
+            super(batterFilterForm, self).__init__(*args, **kwargs)
+            for entry in config:
+                STAT_CHOICES.append((entry[1], entry[0]))
+
+            self.fields['orderby'] = ChoiceField(choices=STAT_CHOICES, label='Order By')
+        else:
+            super(batterFilterForm, self).__init__(*args, **kwargs)
+            self.fields['orderby'] = ChoiceField(choices=STAT_CHOICES, label='Order By')
+            self.cleaned_data['orderby'] = kwargs['data']['orderby']
+
 def changeFilter(request):
-    form = batterFilterForm(request.POST)
+    form = batterFilterForm(data=request.POST)
     if form.is_valid():
         urlRedirect = '/batters/find/{pos}/{league}/{orderby}/{sortorder}/1/{showdrafted}'.format(
             pos=form.cleaned_data['pos'],
@@ -84,6 +92,9 @@ def changeFilter(request):
 
 def show(request, pos, league, orderby, sortorder, page, showdrafted):
     batterLines = BatterYearLine.objects.all()
+
+    if showdrafted == '0':
+        batterLines = batterLines.exclude(player__draftpick__isnull = False)
 
     hasProjectionType = request.session.__contains__('projectionType')
     if not hasProjectionType:
@@ -109,8 +120,14 @@ def show(request, pos, league, orderby, sortorder, page, showdrafted):
     else:
         batterLines = batterLines.order_by('-' + orderby)
 
+    currentConfig = []
 
-    form = batterFilterForm(initial=
+    if request.session['projectionType'] == 'pecota':
+        currentConfig = batterPecotaConfig
+    elif request.session['projectionType'] == 'bbhq':
+        currentConfig = batterBbhqConfig
+
+    form = batterFilterForm(currentConfig, data=
         {
             'pos' : pos,
             'league' : league,
@@ -120,7 +137,8 @@ def show(request, pos, league, orderby, sortorder, page, showdrafted):
         })
 
     start = LINES_PER_PAGE * (int(page) - 1)
-    end = LINES_PER_PAGE * int(page) - 1
+    end = LINES_PER_PAGE * int(page)
+
     numPages = len(batterLines) / LINES_PER_PAGE + 1
 
     hasLeagueId = request.session.__contains__('leagueId')
@@ -134,18 +152,13 @@ def show(request, pos, league, orderby, sortorder, page, showdrafted):
         leagueId = -1
         teamToDraft = None
 
-    if request.session['projectionType'] == 'pecota':
-        config = batterPecotaConfig
-    elif request.session['projectionType'] == 'bbhq':
-        config = batterBbhqConfig
-
     return render_to_response('stats.html',
         {
             'lines' : batterLines[start:end],
             'pageTitle' : 'Batter Stats for ' + pos,
             'headerTitle' : 'Batter lines for pos: ' + pos,
             'pos' : pos,
-            'config' : config,
+            'config' : currentConfig,
             'form' : form,
             'filterAction' : '/draft/batters/changeFilter',
             'baseUrl' : '/batters/find/{pos}/{league}/{orderby}/{sortorder}'.format(

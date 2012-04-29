@@ -83,6 +83,10 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
+
+                            {% if undoDraft %}
+                                <td><a href="/draft/undo/{{ line.pick }}">Undo Pick</a></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>

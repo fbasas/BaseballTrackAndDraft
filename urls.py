@@ -24,7 +24,8 @@ urlpatterns = patterns('',
     url(r'draft/pick/(?P<player>\d*)/(?P<team>\d*)/(?P<league>\d*)', 'draft.views.pick.add'),
     url(r'draft/thrStarterEdit/(?P<team>\w*)', 'draft.views.import.thrStarter.edit'),
     url(r'draft/showTeams', 'draft.views.import.thrStarter.showTeams'),
-    # url(r'draft/show/(?P<league>\d*)'), 'draft.views.pick.show',
+    url(r'draft/show/(?P<page>\d*)', 'draft.views.pick.show'),
+    url(r'draft/undo/(?P<pick>\d*)', 'draft.views.pick.undo'),
 
     url(r'league/set/(?P<leagueId>\d*)', 'draft.views.utils.setLeague'),
 

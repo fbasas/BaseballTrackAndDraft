@@ -73,16 +73,32 @@ def add(request, player, team, league):
 
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
-def show(request, pos, league, orderby, sortorder, page):
+def show(request, page):
     picksLines = DraftPick.objects.all()
-    if pos == 'OF':
-        picksLines = picksLines.filter(player__pos__contains='F')
-
+    league = request.session['leagueId']
     picksLines = picksLines.filter(league__exact=league)
+
+    start = LINES_PER_PAGE * (int(page) - 1)
+    end = LINES_PER_PAGE * int(page) - 1
+    numPages = len(picksLines) / LINES_PER_PAGE + 1
+
+    leagueName = League.objects.get(id=league).name
 
     return render_to_response('stats.html',
         {
-
+            'lines' : picksLines[start:end],
+            'pageTitle' : 'Draft picks for ' + leagueName,
+            'headerTitle' : 'Draft picks for ' + leagueName,
+            'baseUrl' : '/draft/show',
+            'config' : draftPickConfig,
+            'numPages' : numPages,
+            'activePage' : page,
+            'draft' : False,
+            'undoDraft' : True
         },
         context_instance=RequestContext(request)
     )
+
+def undo(request, pick):
+    DraftPick.objects.all().filter(pick__gte=pick).delete()
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])

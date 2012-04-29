@@ -90,6 +90,9 @@ def changeFilter(request):
 def show(request, pos, league, orderby, sortorder, page, showdrafted):
     pitcherLines = PitcherYearLine.objects.all()
 
+    if showdrafted == '0':
+        pitcherLines = pitcherLines.exclude(player__draftpick__isnull = False)
+
     hasProjectionType = request.session.__contains__('projectionType')
     if not hasProjectionType:
         request.session['projectionType'] = 'pecota'
@@ -101,8 +104,8 @@ def show(request, pos, league, orderby, sortorder, page, showdrafted):
     elif request.session['projectionType'] == 'bbhq':
         pitcherLines = pitcherLines.filter(label__exact='BBHQ Proj')
 
-        if orderby == 'warp':
-            orderby = 'dollarValue'
+    if orderby == 'warp':
+        orderby = 'dollarValue'
 
     if pos != 'ALL':
         pitcherLines = pitcherLines.filter(player__pos__exact=pos)
@@ -122,7 +125,8 @@ def show(request, pos, league, orderby, sortorder, page, showdrafted):
         })
 
     start = LINES_PER_PAGE * (int(page) - 1)
-    end = LINES_PER_PAGE * int(page) - 1
+    end = LINES_PER_PAGE * int(page)
+
     numPages = len(pitcherLines) / LINES_PER_PAGE + 1
 
     hasLeagueId = request.session.__contains__('leagueId')
@@ -160,7 +164,7 @@ def show(request, pos, league, orderby, sortorder, page, showdrafted):
             'numPages' : numPages,
             'draft' : draft,
             'teamToDraft' : teamToDraft,
-            'leagueId' : leagueId,
+            'leagueId' : int(leagueId),
             'showdrafted' : showdrafted
          },
         context_instance=RequestContext(request))
