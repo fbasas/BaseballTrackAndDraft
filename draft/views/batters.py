@@ -63,19 +63,19 @@ class batterFilterForm(forms.Form):
     league = ChoiceField(choices=LEAGUE_CHOICES, label='League')
     sortorder = ChoiceField(choices=SORTORDER_CHOICES, label='Sort Order')
     showdrafted = ChoiceField(choices=YESNO_CHOICES, label='Show Drafted Players')
+    currentConfig = None
 
     def __init__(self, config=None, *args, **kwargs):
+        super(batterFilterForm, self).__init__(*args, **kwargs)
         STAT_CHOICES = []
 
         if config is not None:
-            super(batterFilterForm, self).__init__(*args, **kwargs)
-            for entry in config:
-                STAT_CHOICES.append((entry[1], entry[0]))
-            self.fields['orderby'] = ChoiceField(choices=STAT_CHOICES, label='Order By')
-        else:
-            super(batterFilterForm, self).__init__(*args, **kwargs)
-            STAT_CHOICES.append((kwargs['data']['orderby'], kwargs['data']['orderby']))
-            self.fields['orderby'] = ChoiceField(choices=STAT_CHOICES, label='Order By')
+            batterFilterForm.currentConfig = config
+
+        for entry in batterFilterForm.currentConfig:
+            STAT_CHOICES.append((entry[1], entry[0]))
+
+        self.fields['orderby'] = ChoiceField(choices=STAT_CHOICES, label='Order By')
 
     def clean(self):
         cleaned_data = super(batterFilterForm, self).clean()
