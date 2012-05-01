@@ -71,12 +71,17 @@ class batterFilterForm(forms.Form):
             super(batterFilterForm, self).__init__(*args, **kwargs)
             for entry in config:
                 STAT_CHOICES.append((entry[1], entry[0]))
-
             self.fields['orderby'] = ChoiceField(choices=STAT_CHOICES, label='Order By')
         else:
             super(batterFilterForm, self).__init__(*args, **kwargs)
+            STAT_CHOICES.append((kwargs['data']['orderby'], kwargs['data']['orderby']))
             self.fields['orderby'] = ChoiceField(choices=STAT_CHOICES, label='Order By')
-            self.cleaned_data['orderby'] = kwargs['data']['orderby']
+
+    def clean(self):
+        cleaned_data = super(batterFilterForm, self).clean()
+        cleaned_data['orderby'] = self.data['orderby']
+
+        return cleaned_data
 
 def changeFilter(request):
     form = batterFilterForm(data=request.POST)
